@@ -1,6 +1,7 @@
-# 에라스토테네스의 체
-def eratosthenes():
-    n = 11  # 체크할 범위
+# 소수
+
+
+def eratosthenes(n):
     a = [False] + [False] + [True] * (n - 1)  # 0,1은 소수가 아니므로 False
     primes = []  # 범위 안의 소수를 저장할 리스트
 
@@ -12,13 +13,14 @@ def eratosthenes():
     return primes
 
 
-import math
+M = int(input())
+N = int(input())
 
-# 소수 판별 함수
-def is_prime_number(x):
-    if x <= 1:
-        return False
-    for i in range(2, int(math.sqrt(x)) + 1):
-        if x % i == 0:
-            return False
-    return True
+all_nums = eratosthenes(N)
+nums = [x for x in all_nums if x >= M]
+
+if len(nums) == 0:
+    print(-1)
+else:
+    print(sum(nums))
+    print(min(nums))
