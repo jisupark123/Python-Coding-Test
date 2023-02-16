@@ -1,19 +1,6 @@
 # 미로 탐색
 
 
-from sys import stdin
-from collections import deque
-
-input = stdin.readline
-
-n, m = map(int, input().split())
-maze = [input().strip() for _ in range(n)]
-directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-
-dp = [[0 for _ in range(m)] for _ in range(n)]
-dp[0][0] = 1
-
-
 def dfs(x, y):
     if x == n - 1 and y == m - 1:
         return
@@ -49,6 +36,18 @@ def bfs():
                 )
                 queue.append([indices[0] + d[0], indices[1] + d[1]])
 
+
+from sys import stdin
+from collections import deque
+
+input = stdin.readline
+
+n, m = map(int, input().split())
+maze = [input().strip() for _ in range(n)]
+directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+dp = [[0 for _ in range(m)] for _ in range(n)]
+dp[0][0] = 1
 
 bfs()
 print(dp[n - 1][m - 1])
