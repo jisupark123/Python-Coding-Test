@@ -2,7 +2,6 @@
 # i에서의 정답은
 # i까지의 합 + i 부터의 합
 # i 부터의 합
-
 N = int(input())
 lst = list(map(int, input().split()))
 
