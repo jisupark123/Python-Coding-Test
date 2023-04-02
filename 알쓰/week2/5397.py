@@ -1,13 +1,6 @@
 # 키로거
 import sys
 from collections import deque
-import timeit
-
-
-input = sys.stdin.readline
-# T = int(input())
-
-start_time = timeit.default_timer()
 
 
 def get_password(s: str) -> str:
@@ -31,9 +24,9 @@ def get_password(s: str) -> str:
     return "".join(lst)
 
 
-# for _ in range(T):
-#     s = input().strip()
-s = "<<BP<A>>Cd-"
-print(get_password(s))
+input = sys.stdin.readline
+T = int(input())
 
-print(f"{timeit.default_timer() - start_time}초 걸렸습니다.")
+for _ in range(T):
+    s = input().strip()
+    print(get_password(s))

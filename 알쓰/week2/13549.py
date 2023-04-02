@@ -6,16 +6,14 @@
 # 2. N - 1 에서의 가장 빠른 시간 + 1
 # 3. N * 2 에서의 가장 빠른 시간
 
-# def dfs(n,sec):
-#     if n == finish
 
 from collections import deque
 
 start, finish = map(int, input().split())
 
 # -1 -> 방문을 한 번도 안함
-# 0~ -> finish까지 걸리는 시간
-dp = [-1] * (max(start, finish) * 3)
+# n >= 0 -> finish까지 걸리는 시간
+dp = [-1] * (max(start, finish) * 2)
 dp[start] = 0
 dp[finish] = abs(start - finish)
 queue = deque([start])
@@ -26,7 +24,7 @@ while queue:
     if n < finish:
         if dp[n * 2] == -1 or dp[n] < dp[n * 2]:
             dp[n * 2] = dp[n]
-            queue.append(n * 2)
+            queue.appendleft(n * 2)
         if dp[n + 1] == -1 or dp[n] + 1 < dp[n + 1]:
             dp[n + 1] = dp[n] + 1
             queue.append(n + 1)

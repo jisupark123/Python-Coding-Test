@@ -11,6 +11,7 @@ import sys
 
 input = sys.stdin.readline
 
+
 # 같은 행에 중복되는 숫자가 없는지
 def check_row(row, n):
     for i in range(9):
@@ -45,7 +46,7 @@ def check_rect(row, col, n):
 sudoku = [[] for _ in range(9)]  # 스도쿠 판
 empty_place = []  # 빈자리[(row,col)]
 
-# 스도쿠판에 숫자 채우기 & 빈자리는 따로 보관
+# 스도쿠판에 숫자 채우기 & 빈자리는 따로 리스트에 보관
 for n in range(9):
     for m, num in enumerate([int(x) for x in input().split()]):
         sudoku[n].append(num)
@@ -58,13 +59,13 @@ def dfs(n):
         for i in range(9):
             print(*sudoku[i])
         exit(0)
+    row = empty_place[n][0]
+    col = empty_place[n][1]
     for i in range(1, 10):
-        row = empty_place[n][0]
-        col = empty_place[n][1]
         if check_row(row, i) and check_col(col, i) and check_rect(row, col, i):
-            sudoku[row][col] = i
-            dfs(n + 1)
-            sudoku[row][col] = 0
+            sudoku[row][col] = i  # 1~9 숫자 넣고
+            dfs(n + 1)  # 새로운 분기 시작
+            sudoku[row][col] = 0  # 분기가 종료되면 (답이 없다면) 원상태 복구
 
 
 dfs(0)
