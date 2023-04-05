@@ -7,7 +7,7 @@ from collections import deque
 input = sys.stdin.readline
 
 
-# 상어 위치 세팅
+# 상어 위치 세팅 & 맵 생성
 def set_baby_shark_pos():
     global curr_pos
     for i in range(N):
@@ -51,16 +51,16 @@ def compare_fish(fish_A, fish_B) -> bool:
 
 구현 방법 -> bfs
 큐를 생성한다. 초기값은 아기 상어의 현재 위치
-각각의 인덱스의 거리를 저장해둘 리스트(distance)를 생성
+각각의 인덱스에 방문처리를 할 NxN 리스트 생성
 min_fish <- {idx:(-1,-1), dist: 1e9} 가장 가까운 물고기의 인덱스, 거리
 1. 큐에서 위치 (i,j)를 꺼낸다.
 2. 현재 위치에 물고기가 있다면 min_fish.dist 와 비교 -> 최신화
 3. 상하좌우 4방향에 대해서 다음 위치를 구한다. (next_i,next_j)
 4. 다음 위치에 대해서 검사
 4.a 인덱스 검사
-4.b 다음 위치에 자신보다 레벨이 높은 상어가 있는지
-4.c 다음 위치에 저장된 최단경로 값이 현재 위치 + 1 보다 높은지
-5. 가능하다면 distance[다음 위치]에 현재 위치 + 1 설정하고 큐에 다음 위치 추가
+4.b 다음 위치를 방문했었는지(방문 안 한 경우만 진행)
+4.c 다음 위치에 자신보다 레벨이 높은 상어가 있는지
+5. 가능하다면 방문 처리하고 큐에 다음 위치 추가
 6. 큐가 비었다면 min_fish.idx, time 리턴
 """
 
@@ -69,29 +69,22 @@ def get_min_fish():
     # 최단 거리의 물고기를 저장
     # idx -> 인덱스 | dist -> 거리
     min_fish = {"idx": (-1, -1), "distance": 1e9}
+    visit = [[False for _ in range(N)] for _ in range(N)]
 
-    # distance[i][j] -> 시작점에서 distance[i][j] 까지의 최단거리
-    distance = [[-1 for _ in range(N)] for _ in range(N)]
-
-    # 시작 지점을 0으로 초기화
-    distance[curr_pos[0]][curr_pos[1]] = 0
-
-    # 큐의 초기값 -> 현재 위치
-    queue = deque([curr_pos])
+    # 큐의 초기값 -> 현재 위치, 총 거리
+    queue = deque([[curr_pos[0], curr_pos[1], 0]])
     while queue:
-        pos_y, pos_x = queue.popleft()
+        pos_y, pos_x, dist = queue.popleft()
 
         # 큐에서 빼낸 위치에 아기 상어보다 레벨이 낮은 물고기가 있다면
         # min_fish와 비교 -> 업데이트
         if (
             space[pos_y][pos_x] != 0
             and space[pos_y][pos_x] < level
-            and compare_fish(
-                {"idx": (pos_y, pos_x), "distance": distance[pos_y][pos_x]}, min_fish
-            )
+            and compare_fish({"idx": (pos_y, pos_x), "distance": dist}, min_fish)
         ):
             min_fish["idx"] = (pos_y, pos_x)
-            min_fish["distance"] = distance[pos_y][pos_x]
+            min_fish["distance"] = dist
 
         # 상하좌우 4곳을 각각 탐색
         for d in direction:
@@ -101,24 +94,20 @@ def get_min_fish():
                 # 인덱스 검사
                 0 <= next_pos_y < N
                 and 0 <= next_pos_x < N
+                # 방문하지 않은 곳이라면
+                and not visit[next_pos_y][next_pos_x]
                 # 아기 상어보다 레벨이 높은 물고기가 있다면 접근 불가
                 and space[next_pos_y][next_pos_x] <= level
-                # 방문하지 않은 곳이거나 이미 구해놓은 최단거리보다 더 가깝다면
-                and (
-                    distance[next_pos_y][next_pos_x] == -1
-                    or distance[next_pos_y][next_pos_x] > distance[pos_y][pos_x] + 1
-                )
             ):
-                # distance 배열에 다음 방문할 곳 업데이트
-                distance[next_pos_y][next_pos_x] = distance[pos_y][pos_x] + 1
-
+                # 방문처리
+                visit[next_pos_y][next_pos_x] = True
                 # 큐에 다음 방문할 곳 추가
-                queue.append((next_pos_y, next_pos_x))
+                queue.append((next_pos_y, next_pos_x, dist + 1))
 
     # (잡아먹을 물고기 y, 잡아먹을 물고기 x, 걸린 시간) return
     next_fish_y = min_fish["idx"][0]
     next_fish_x = min_fish["idx"][1]
-    return (next_fish_y, next_fish_x, distance[next_fish_y][next_fish_x])
+    return (next_fish_y, next_fish_x, min_fish["distance"])
 
 
 N = int(input())
@@ -139,6 +128,7 @@ set_baby_shark_pos()  # 아기 상어 위치 세팅
 2. 상어를 그 자리로 이동시키고 먹이가 된 상어를 삭제한다.
 3. 먹을 수 있는 상어가 없다면 종료한다.
 """
+
 
 while True:
     next_fish = get_min_fish()  # 잡아먹을 물고기
