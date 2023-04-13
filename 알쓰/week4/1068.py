@@ -1,7 +1,6 @@
 # 트리
 
 import sys
-from collections import deque
 
 input = sys.stdin.readline
 
@@ -9,35 +8,37 @@ N = int(input())
 
 
 # 부모 -> 자식
-graph = [[] for _ in range(N)]
-parents = list(map(int, input().split()))
-root_node = 0
-delete_node = int(input())
+graph = [[] for _ in range(N)]  # graph[i] -> i 번째 노드의 자식 노드들 번호 리스트
+parents = list(map(int, input().split()))  # 부모 노드
+root_node = 0  # 루트 노드
+delete_node = int(input())  # 삭제할 노드
 
 
 for i in range(N):
-    if parents[i] == -1:
+    if parents[i] == -1:  # 부모 노드가 -1이면 루트 노드
         root_node = i
     else:
-        graph[parents[i]].append(i)
+        # 삭제할 노드가 아닌 경우만 부모의 자식 리스트에 추가
+        if i != delete_node:
+            graph[parents[i]].append(i)
 
 if delete_node == root_node:
     print(0)
     exit(0)
 
 
-# 리프노드 -> 자식이 없거나 delete_node인 경우
 res = 0
 
 
 def dfs(node: int):
     global res
-    if len(graph[node]) == 0 or graph[node] == [delete_node]:
+
+    # 자식이 없으면 리프노드
+    if len(graph[node]) == 0:
         res += 1
         return
     for n in graph[node]:
-        if n != delete_node:
-            dfs(n)
+        dfs(n)
 
 
 dfs(root_node)

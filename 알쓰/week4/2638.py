@@ -23,6 +23,7 @@ OUTER_AIR = 2
 INNER_AIR = 0
 
 
+# 치즈가 녹는지 검사하는 함수 - 상하좌우 중에 두 면이 바깥 공기(0)인지
 def is_melting(i, j):
     cnt = 0
     for d in direction:
@@ -33,6 +34,7 @@ def is_melting(i, j):
     return False
 
 
+# 오염된 안쪽 공기를 모두 바깥 공기로 변환하는 함수 (BFS)
 def change_inner_air_to_outer_air(y, x):
     queue = deque()
     queue.append([y, x])
@@ -50,16 +52,10 @@ def change_inner_air_to_outer_air(y, x):
 N, M = map(int, input().split())
 
 paper = [list(map(int, input().split())) for _ in range(N)]
-cheeses = deque()
+
 
 direction = [(1, 0), (0, -1), (-1, 0), (0, 1)]
 
-
-# 치즈 위치 찾기
-for i in range(N):
-    for j in range(M):
-        if paper[i][j] == CHEESE:
-            cheeses.append((i, j))
 
 # 둘러쌓인 곳 찾기
 # 처음에 바깥의 공기 모두 2로 변경
@@ -76,21 +72,34 @@ while queue:
             queue.append([next_i, next_j])
 
 
+cheeses = deque()
+
+
+# 치즈 위치 찾기
+for i in range(N):
+    for j in range(M):
+        if paper[i][j] == CHEESE:
+            cheeses.append((i, j))
+
 res = 0
 
 while cheeses:
     melting = []
     for _ in range(len(cheeses)):
         cheese = cheeses.popleft()
+
+        # 치즈가 녹는지 검사
         if is_melting(*cheese):
             melting.append(cheese)
         else:
             cheeses.append(cheese)
+
     for c in melting:
         paper[c[0]][c[1]] = OUTER_AIR
         for d in direction:
             ny, nx = c[0] + d[0], c[1] + d[1]
             if paper[ny][nx] == INNER_AIR:
+                # 오염된 안쪽 공기를 모두 바깥 공기로 변환 (BFS)
                 change_inner_air_to_outer_air(ny, nx)
 
     res += 1
