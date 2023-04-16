@@ -23,26 +23,6 @@ for _ in range(V):
         tree[node].append((n, c))
 
 
-# def get_max(n):
-#     max_node = 0
-
-#     def dfs(prev, curr, total):
-#         max_cost = total
-
-#         for node, cost in tree[curr]:
-#             if node != prev:
-#                 cost = dfs(curr, node, total + cost)
-#                 if cost > max_cost:
-#                     nonlocal max_node
-#                     max_cost = cost
-#                     max_node = node
-
-#         return max_cost
-
-#     _max = dfs(-1, n, 0)
-#     return (_max, max_node)
-
-
 def get_max(n):
     max_cost = 0
     max_node = 0

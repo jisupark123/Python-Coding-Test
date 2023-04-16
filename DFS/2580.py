@@ -8,6 +8,7 @@
 
 from copy import deepcopy
 
+
 # row,col에 새로운 값이 들어왔을 때, 가능한지 검사하는 함수
 def test(s: list[list[int]], row: int, col: int) -> bool:
     # row 검사
@@ -96,7 +97,6 @@ res = [[]]
 
 
 def dfs(s: list[list[int]], empty_place: list[tuple[int, int]]):
-
     if len(empty_place) == 0:
         global res
         res = s
