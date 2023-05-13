@@ -1,27 +1,31 @@
 # 좋다
 
+
 """
-0이 하나 있으면 중복되는 숫자만큼 count 해주면 됨
-0이 두개 있으면 
+key가 숫자의 합, value가 [인덱스,인덱스] 형식의 리스트
+key가 존재하고 value의 조합 중에 해당 숫자의 인덱스가 포함되지 않은 조합이 있다면 '좋다'
 """
+
+from collections import defaultdict
 
 N = int(input())
 
-lst = list(map(int, input().split()))
-
-s = set()
-
+nums = list(map(int, input().split()))
+sum_idx = defaultdict(list)
+max_num = max(nums)
 for i in range(N):
     for j in range(i + 1, N):
-        if lst[i] != 0 and lst[j] == 0:
-            s.add(lst[i] + lst[j])
+        if nums[i] + nums[j] <= max_num:  # 최적화 (속도, 메모리 초과)
+            sum_idx[nums[i] + nums[j]].append((i, j))
 
-
-cnt = 0
+count = 0
 
 for i in range(N):
-    if lst[i] in s:
-        cnt += 1
+    if len(sum_idx[nums[i]]) == 0:
+        continue
+    for combi in sum_idx[nums[i]]:
+        if i not in combi:
+            count += 1
+            break
 
-
-print(cnt)
+print(count)
