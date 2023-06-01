@@ -11,19 +11,21 @@ from collections import defaultdict
 N = int(input())
 
 nums = list(map(int, input().split()))
-sum_idx = defaultdict(list)
+num_combi = defaultdict(list)
+
 max_num = max(nums)
+
 for i in range(N):
     for j in range(i + 1, N):
         if nums[i] + nums[j] <= max_num:  # 최적화 (속도, 메모리 초과)
-            sum_idx[nums[i] + nums[j]].append((i, j))
+            num_combi[nums[i] + nums[j]].append((i, j))
 
 count = 0
 
 for i in range(N):
-    if len(sum_idx[nums[i]]) == 0:
+    if len(num_combi[nums[i]]) == 0:
         continue
-    for combi in sum_idx[nums[i]]:
+    for combi in num_combi[nums[i]]:
         if i not in combi:
             count += 1
             break
