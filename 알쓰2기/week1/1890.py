@@ -26,3 +26,6 @@ for i in range(N):
         # 아래로 이동
         if i + board[i][j] < N:
             dp[i + board[i][j]][j] += dp[i][j]
+
+for d in dp:
+    print(d)
