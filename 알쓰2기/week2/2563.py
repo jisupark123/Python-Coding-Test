@@ -10,7 +10,9 @@ color_papers = [list(map(int, input().split())) for _ in range(n)]  # 색종이
 for color_paper in color_papers:
     # 색종이가 시작하는 row -> 종이의 크기 - 종이의 아래변과의 거리 - 색종이의 크기(10)
     row = 100 - color_paper[1] - 10
-    col = color_paper[0]  # 색종이가 시작하는 col
+
+    # 색종이가 시작하는 col -> 종이의 왼변과의 거리
+    col = color_paper[0]
 
     # 색종이의 넓이만큼 칠하기
     for i in range(10):
@@ -18,6 +20,7 @@ for color_paper in color_papers:
             paper[row + i][col + j] = 1
 
 
+# 색종이의 총 넓이 구하기
 res = 0
 for i in range(100):
     for j in range(100):
