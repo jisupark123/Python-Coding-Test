@@ -20,12 +20,12 @@
 import sys
 
 input = sys.stdin.readline
-
 N, L = map(int, input().split())
 
+# 입력받은 2차원 리스트
 _map = [list(map(int, input().split())) for _ in range(N)]
 
-res = 0
+res = 0  # 결과값
 
 """
 j+1이 j랑 같다면 j+=1
@@ -43,50 +43,62 @@ j + 1이 j보다 1 크다면
 """
 
 
+# 모든 행을 for loop으로 돌면서 지나갈 수 있는 길의 개수를 구한다.
 def road_cnt():
-    copy_map = [[_map[i][j] for j in range(N)] for i in range(N)]
-    cnt = 0
+    cnt = 0  # 지나갈 수 있는 길의 개수
+
     for i in range(N):  # 행 검사
-        row = _map[i]
-        copy_row = copy_map[i]
+        row = _map[i]  # 원본 row
+        copy_row = row.copy()  # 복사본 row (경사로를 놓은 칸을 저장)
         j = 0
-        is_road = True
+        is_road = True  # 길이 있는지 없는지
+
+        # j가 끝까지(N-1) 가면 길이 있다고 판정
         while j < N - 1:
+            # 현재 칸과 다음 칸이 평행하다면 통과
             if row[j] == row[j + 1]:
                 j += 1
+
+            # 현재 칸과 다음 칸의 높이 차가 2이상이면 길이 없음
             elif abs(row[j] - row[j + 1]) > 1:
                 is_road = False
                 break
+
+            # 다음 칸이 더 낮을 때
             elif row[j] > row[j + 1]:
+                # 경사로를 놓아도 범위를 벗어나는 경우 - 길이 없음
                 if j + L >= N:
                     is_road = False
-
                     break
+
+                # 경사로를 놓을 칸들의 높이가 모두 같을 경우 경사로를 놓을 수 있다.
+                # 경사로를 놓은 칸을 저장한다. (copy_row)
                 if row[j + 1 : j + L + 1].count(row[j + 1]) == L:
                     for col in range(j + 1, j + L + 1):
-                        copy_map[i][col] = -1
-
+                        copy_row[col] = -1
                     j += L
-
                 else:
                     is_road = False
-
                     break
 
-            # 1. j+1-L이 0보다 작다면 길이 없는 것(경사로가 삐져나감)
-            # 2. j,...,j-L+1이 모두 j라면 모두 -1로 바꾸고(경사로 놓기) j+=1
-            # 3. 2번에 해당하지 않다면 길이 없는 것 (경사로를 놓을 수 없음)
-
+            # 다음 칸이 더 높을 때
             elif row[j] < row[j + 1]:
+                # 경사로를 놓아도 범위를 벗어나는 경우 - 길이 없음
                 if j + 1 - L < 0:
                     is_road = False
                     break
+
+                # 경사로를 놓을 칸들의 높이가 모두 같을 경우
+                # And
+                # 그 자리에 이미 경사로가 놓여있지 않을 경우
+                # 경사로를 놓을 수 있다.
+                # 경사로를 놓은 칸을 저장한다. (copy_row)
                 if (
                     row[j + 1 - L : j + 1].count(row[j]) == L
                     and copy_row[j + 1 - L : j + 1].count(-1) == 0
                 ):
                     for col in range(j + 1 - L, j + 1):
-                        copy_map[i][col] = -1
+                        copy_row[col] = -1
                     j += 1
                 else:
                     is_road = False
@@ -99,6 +111,8 @@ def road_cnt():
 
 
 res += road_cnt()
+
+# Transpose
 for i in range(N):
     for j in range(i, N):
         _map[i][j], _map[j][i] = _map[j][i], _map[i][j]
