@@ -1,40 +1,17 @@
-# Four Squares
+n = int(input())
 
-"""
-25
-4 3
-1 2 2 4
+dp = [4] * (n + 1)  # dp[i] -> i를 제곱수로 표현하는 최소 횟수
+dp[0] = 0
+dp[1] = 1
 
-"""
+for i in range(n):
+    for j in range(1, n):
+        multi_j = j**2
+        if i + multi_j > n:
+            break
+        if dp[i + multi_j] == 0:
+            dp[i + multi_j] = dp[i] + 1
+        else:
+            dp[i + multi_j] = min(dp[i + multi_j], dp[i] + 1, 4)
 
-"""
-숫자 N의 경우의 수
--> sol(N, 4) // 4는 횟수 제한
--> sol(N - (1**2), 3) + sol(N - (2**2), 3) + sol(N - (3**2), 3) + ... + sol(N - ((N**0.5)**2), 3)
-"""
-
-import math
-
-N = int(input())
-
-limit = math.ceil(N**0.5)
-
-# memo = [[-1] * 5] * (N + 1)
-
-
-def sol(n, cnt):
-    if n == 0:
-        return 1
-    if cnt == 0:
-        return 0
-    res = 0
-    for i in range(1, limit):
-        r = sol(n - (i**2), cnt - 1)
-        if r != 0:
-            print(n, cnt, i)
-        res += r
-
-    return res
-
-
-print(sol(N, 4))
+print(dp[n])
