@@ -10,6 +10,7 @@ res = 1e9
 
 
 combies = list(combinations(range(N), N // 2))
+
 for combi in combies[: len(combies) // 2]:
     group1 = combi
     group2 = tuple(set(range(N)) - set(group1))
