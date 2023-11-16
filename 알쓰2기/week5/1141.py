@@ -7,30 +7,55 @@ input = sys.stdin.readline
 N = int(input())
 
 words = [input().strip() for _ in range(N)]
+words = list(set(words))  # 중복 제거
 
 
-# n개의 부분집합으로 묶었을 때 가능한 집합이 나오는지
+def is_prefix(a, b):
+    return a in b or b in a
+
+
+# i,j -> i,j가 접두어 관계이면 1, 아니면 0
+table = [[0] * len(words) for _ in range(len(words))]
+for i in range(len(words)):
+    for j in range(len(words)):
+        prefix = is_prefix(words[i], words[j])
+        table[i][j] = 1 if prefix else 0
+
+
+# 크기를 n으로 설정했을 때 가능한 부분 집합이 존재하는지
 def possible(n):
-    visited = [0] * n
+    ans = False
+    tmp = []
 
-    def dfs(i, depth):
-        if depth == n:
-            s = [words[idx] for idx in range(n) if not visited[idx]]
-            print(depth, s)
-            for a in range(len(s) - 1):
-                for b in range(a + 1, len(s)):
-                    if words[a] in words[b] or words[b] in words[a]:
-                        return False
-            return True
+    def dfs(idx):
+        nonlocal ans
+        if ans:
+            return
+        if len(tmp) == n:
+            ans = True
+            return
 
-        for j in range(i, n):
-            if not visited[j]:
-                visited[j] = 1
-                tmp = dfs(j + 1, depth + 1)
-                visited[j] = 0
-                return tmp
+        for i in range(idx, len(words)):
+            p = sum([table[i][j] for j in tmp]) == 0  # 접두어가 이미 tmp에 존재하는지 검사
+            if p:
+                tmp.append(i)
+                dfs(i)
+                tmp.pop()
 
-    return dfs(0, 0)
+    dfs(0)
+    return ans
 
 
-print(possible(4))
+start = 1
+end = len(words)
+res = 1
+
+while start <= end:
+    mid = (start + end) // 2
+    if possible(mid):
+        res = max(res, mid)
+        start = mid + 1
+    else:
+        end = mid - 1
+
+print(res)

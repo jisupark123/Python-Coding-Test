@@ -1,8 +1,8 @@
 import random
 from collections import defaultdict
 
-members = ["지수", "상민", "희윤", "은빈", "범수"]
-problems = {"Gold": 2, "Silver": 10, "Bronze": 3}
+members = ["박지수", "정지수", "상민", "은빈", "범수", "영은"]
+problems = {"Gold": 3, "Silver": 4, "Bronze": 5}
 
 while True:
     problem_list = []
