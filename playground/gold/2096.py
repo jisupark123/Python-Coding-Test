@@ -1,34 +1,27 @@
+# 내려가기
+
+"""
+a행에서 b번째로 내려갔을 때의 최댓값 -> f(a,b)
+f(a,b) = max of f(a+1, 1) | f(a+1, 2) | f(a+1, 3)
+"""
+
+
 import sys
 
 input = sys.stdin.readline
 
-n, m, r = map(int, input().split())
-items = list(map(int, input().split()))
+
+N = int(input())
+
+mapping = [(0, 1), (0, 1, 2), (1, 2)]
+arr = list(map(int, input().split()))
+max_dp = arr[:]
+min_dp = arr[:]
+
+for a in range(N - 1):
+    next_arr = list(map(int, input().split()))
+    max_dp = [max([max_dp[x] + next_arr[a] for x in mapping[a]]) for a in range(3)]
+    min_dp = [min([min_dp[x] + next_arr[a] for x in mapping[a]]) for a in range(3)]
 
 
-graph = [[int(1e9)] * n for _ in range(n)]
-for i in range(n):
-    graph[i][i] = 0
-
-for _ in range(r):
-    a, b, c = map(int, input().split())
-    graph[a - 1][b - 1] = c
-    graph[b - 1][a - 1] = c
-
-
-for a in range(n):
-    for b in range(n):
-        for c in range(n):
-            graph[b][c] = min(graph[b][c], graph[b][a] + graph[a][c])
-
-
-res = 0
-
-for i in range(n):
-    item_cnt = 0
-    for j in range(n):
-        if graph[i][j] <= m:
-            item_cnt += items[j]
-    res = max(res, item_cnt)
-
-print(res)
+print(max(max_dp), min(min_dp))
