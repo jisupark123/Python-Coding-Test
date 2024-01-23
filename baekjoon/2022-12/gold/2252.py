@@ -32,17 +32,3 @@ for i in range(1, N + 1):
 
 for num in res[::-1]:
     print(num, end=" ")
-# def dfs(lst: list[int]):
-#     if len(lst) == 0:
-#         return
-#     for i in lst:
-#         if not visited[i]:
-#             visited[i] = True
-#             dfs(graph[i])
-#             res.append(i)
-
-
-# for i in range(1, N + 1):
-#     if not visited[i]:
-#         dfs(graph[i])
-#         res.append(i)
