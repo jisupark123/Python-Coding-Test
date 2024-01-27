@@ -6,8 +6,6 @@ input = sys.stdin.readline
 
 
 def dfs(x):
-    if len(graph[x]) == 0:
-        return
     for nx in graph[x]:
         if not visited[nx]:
             visited[nx] = 1
