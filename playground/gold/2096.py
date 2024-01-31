@@ -18,10 +18,10 @@ arr = list(map(int, input().split()))
 max_dp = arr[:]
 min_dp = arr[:]
 
-for a in range(N - 1):
+# 새로 들어오는 인풋 관점에서, 이전줄에서 어느 숫자가 내려오는게 좋을지 정한다.
+for _ in range(N - 1):
     next_arr = list(map(int, input().split()))
     max_dp = [max([max_dp[x] + next_arr[a] for x in mapping[a]]) for a in range(3)]
     min_dp = [min([min_dp[x] + next_arr[a] for x in mapping[a]]) for a in range(3)]
-
 
 print(max(max_dp), min(min_dp))

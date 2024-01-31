@@ -21,14 +21,14 @@ res = 0
 
 for i in range(n):
     for j in range(m):
-        if arr[i][j] == 0:
+        if arr[i][j] == 0:  # 주어진 배열의 값이 0이면 크기도 0
             dp[i][j] = 0
         else:
-            prev_row = 0 if i == 0 else dp[i - 1][j]
-            prev_col = 0 if j == 0 else dp[i][j - 1]
-            prev_diag = 0 if i == 0 or j == 0 else dp[i - 1][j - 1]
-            dp[i][j] = min(prev_row, prev_col, prev_diag) + 1
-            res = max(res, dp[i][j])
+            prev_col = 0 if j == 0 else dp[i][j - 1]  # 왼쪽
+            prev_row = 0 if i == 0 else dp[i - 1][j]  # 위
+            prev_diag = 0 if i == 0 or j == 0 else dp[i - 1][j - 1]  # 왼쪽 위 대각선
+            dp[i][j] = min(prev_row, prev_col, prev_diag) + 1  # 최솟값을 뽑고 1을 더한다.
+            res = max(res, dp[i][j])  # 최댓값 갱신
 
 print(res**2)
 
