@@ -21,8 +21,8 @@ input = sys.stdin.readline
 
 N = int(input())
 
-# 비숍의 경로를 저장할 리스트
-board = [list(map(int, input().split())) for _ in range(N)]
+# board = [list(map(int, input().split())) for _ in range(N)]
+board = [[1] * N for _ in range(N)]
 
 candidates = []  # 비숍을 놓을 수 있는 곳들 (후보지)
 
@@ -110,7 +110,6 @@ n = 0  # 놓인 말의 개수
 
 
 def dfs(idx):
-    print(visited)
     global n, res
     if n + blank_cnt <= res:  # 남은 곳을 다 채워도 이미 구한 답보다 같거나 작다면 중단
         return
