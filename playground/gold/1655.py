@@ -12,7 +12,6 @@ A와 B는 항상 같은 원소의 개수로 관리한다. (홀수라면 B의 원
 
 알고리즘 상세
 
-1 2 3 | 4 5 6 7
 
 1. 수 n이 들어오면 n과 A의 최댓값와 B의 최솟값을 비교한다.
 -> 만약 A나 B가 비어있을 것을 대비해서 A에 -10001을, B에 10001을 초기값으로 넣어놓는다.
@@ -77,8 +76,9 @@ A.heappush(-10001)
 
 B = MinHeap()  # 최소힙
 B.heappush(10001)
+
 ans = []
-r = []
+
 for _ in range(N):
     n = int(input())
     max_a = A.max()
@@ -89,7 +89,6 @@ for _ in range(N):
     # -> A보다 B의 길이가 길다면 n을 A에 넣는다.
 
     if n <= max_a:
-        # print(max_a)
         ans.append(max_a)
 
         if len(A) == len(B):
@@ -114,7 +113,6 @@ for _ in range(N):
     # -> A보다 B의 길이가 길다면 n을 B에 넣고 B의 최솟값을 A에 넣는다.
 
     else:
-        # print(min_b)
         ans.append(min_b)
 
         if len(A) == len(B):

@@ -24,9 +24,9 @@ for _ in range(T):
         stack = [i]  # 순서 저장용
         next_i = graph[i]  # 다음 가리키는 사람
         while True:
-            if is_completed(
-                next_i
-            ):  # 가리키는 사람이 이미 방문처리 되어있다면 순환 존재 X
+
+            # 가리키는 사람이 이미 방문처리 되어있다면 순환 존재 X
+            if is_completed(next_i):
                 for x in stack:
                     solo.add(x)
                 return
@@ -34,9 +34,9 @@ for _ in range(T):
             if next_i in visited:  # 가리키는 사람이 stack에 있다면 순환 존재 O
                 for x in range(len(stack) - 1, -1, -1):
                     team.add(stack[x])
-                    if (
-                        stack[x] == next_i
-                    ):  # 순환이 시작되는 지점 전으로는 모두 팀 결성 X
+
+                    # 순환이 시작되는 지점 전으로는 모두 팀 결성 X
+                    if stack[x] == next_i:
                         for a in stack[:x]:
                             solo.add(a)
                         return

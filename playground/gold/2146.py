@@ -13,7 +13,7 @@ input = sys.stdin.readline
 
 
 # 섬을 구분하기 위해 섬마다 각각 다른 식별자를 붙인다.
-# 가장 큰 해시를 가진 섬의 해시를
+# 가장 큰 해시를 가진 섬의 해시를 return
 def hash_to_map():
 
     hash = 2  # 섬이 1로 되어있으므로 해시값은 2부터
