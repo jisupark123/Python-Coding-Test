@@ -38,6 +38,7 @@ for _ in range(K):
                 queue = deque()
 
                 queue.append((i, RED))  # node, color
+                colors[i] = RED
 
                 while queue:
                     n, c = queue.popleft()
