@@ -42,6 +42,3 @@ for _ in range(int(input())):
             )
 
     print(dp[0][N - 1])
-
-for d in dp:
-    print(d)
