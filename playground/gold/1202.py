@@ -1,46 +1,51 @@
 # 보석 도둑
 
 """
-방법: 그리디 알고리즘 & 이분 탐색
-- 가치가 높은 순으로 가방을 채워나감
-- 가능한 것 중에 최대 무게가 가장 작은 가방을 채워야 한다. -> how?
-- 이분 탐색으로 찾기 
--> 못 찾을 경우를 대비해서 탐색 도중 최댓값을 갱신시킨다.
--> 보석 무게와 같거나 클 때만 최댓값 갱신
+- 담을 수 있는 무게가 적은 가방부터 채워나가야 함
+- 보석은 가방에 담을 수 있으면서 가치가 가장 높은 순으로 채워나가야 함
+- 다음 step의 가방으로 넘어갈수록 탐색할 보석의 space가 확장됨
 
------------------------------------------------------------
+- 각 가방에 담을 수 있는 모든 보석을 찾을 때 최소힙을 사용하고 (무게순)
+- 각 가방에 넣을 수 있는 보석 중 가장 가치가 큰 보석을 찾을 때 최대힙을 사용헌다, (가치순)
 
-방법: 그리디 알고리즘 & 해시 테이블 & 이분 탐색
-- 가치가 높은 순으로 가방을 채워나감
-- 가능한 것 중에 최대 무게가 가장 작은 가방을 채워야 한다. -> how?
-- 
+가방은 무게순으로 정렬
 
-해시 테이블 -
-> key:무게, value: 인덱스
-> 1. 양옆으로 인접한 key쌍을 저장
-> 2. 각 무게에 해당하는 가방의 개수를 저장
+1. i <- i 번째 가방, 담을 수 있는 무게 k[i]
+2. 보석이 무게순으로 담긴 최소힙에서 무게가 k 이하인 보석을 꺼낸다.
+3. 위에서 꺼낸 보석을 보석이 가치순으로 담긴 최대힙에 삽입한다.
+4. 무게가 k보다 큰 보석이 나올 때까지 2,3을 반복
+4. 최대힙에서 보석을 꺼내고 결과에 추가한다.
+5. i <- i + 1
 
-이분 탐색 - 
-> 
 """
 
 import sys
+import heapq
 
 input = sys.stdin.readline
 
 
-def find(x):  # 이분 탐색으로 x or x와 가장 가까운 item 탐색
-    res = None  # x와 같은 가방의 인덱스
-    near_res = None  # x와 가장 가까운 가방의 인덱스
-
-    start = 0
-    end = K - 1
-
-
 N, K = map(int, input().split())
 
-jewels = [list(map(int, input().split())) for _ in range(N)]
+jewels = [list(map(int, input().split())) for _ in range(N)]  # M, V
 bags = [int(input()) for _ in range(K)]
-
-jewels.sort(key=lambda x: (x[1], x[0]), reverse=True)
 bags.sort()
+
+
+heapq.heapify(jewels)
+max_heap = []
+
+ans = 0
+
+for k in bags:
+
+    for _ in range(len(jewels)):
+        if jewels[0][0] > k:  # 무게가 k 이하인 보석을 꺼낸다
+            break
+        m, v = heapq.heappop(jewels)
+        heapq.heappush(max_heap, -v)
+
+    if len(max_heap):  # 담을 수 있는 보석이 있을 경우
+        ans += -heapq.heappop(max_heap)
+
+print(ans)

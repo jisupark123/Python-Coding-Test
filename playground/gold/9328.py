@@ -1,62 +1,103 @@
 # 열쇠
 
+"""
+BFS
+
+- 획득한 key는 전역으로 관리
+- 탐색 중 키가 없어서 막힌다면 위치 save 후 해당 키 획득 시 다시 queue에 삽입 (key에 따른 위치들은 해시테이블로 관리)
+- 한 번 방문했던 곳은 다시 방문 X
+"""
+
 import sys
-from collections import deque
-
-BLANK = "."
-WALL = "*"
-DOC = "$"
-
-
-# 소문자인지 판별
-def is_lower(s: str):
-    return s == s.lower()
-
-
-# 문자열 복사
-def copy_string(s: str):
-    return "".join([x for x in s])
-
-
-# key set이 같거나 적고, 획득한 문서가 같거나 적다면 이미 방문했던 곳
-def possible_update(arr, new_keys, new_docs_cnt):
-    for keys, docs_cnt in arr:
-        if new_keys in keys and new_docs_cnt <= docs_cnt:
-            return False
-    return True
+from collections import deque, defaultdict
 
 
 input = sys.stdin.readline
 
-h, w = map(int, input().split())
 
-_map = [list(input().strip()) for _ in range(h)]
+for _ in range(int(input())):
 
-dy = [0, 1, 0, -1]
-dx = [1, 0, -1, 0]
+    h, w = map(int, input().split())
 
-init_keys = sorted(input().strip())  # 처음부터 보유한 키 set
-if init_keys == "0":
-    init_keys = ""
+    _map = [list(input().strip()) for _ in range(h)]
 
-entries = []  # 입구
+    dy = [0, 1, 0, -1]
+    dx = [1, 0, -1, 0]
 
-for i in range(h):
-    for j in range(w):
-        if _map[i][j] != WALL:
-            entries.append((i, j))
+    keys = set(list(input().strip()))
+    if "0" in keys:
+        keys = set()
 
-init = list(map(lambda x: (*x, init_keys), entries))
+    entries = []  # 입구
 
-visited = [[[] for _ in range(w)] for _ in range(h)]
+    for i in range(h):
+        for j in range(w):
+            if _map[i][j] != "*" and (i in (0, h - 1) or j in (0, w - 1)):
+                entries.append((i, j))
 
-for y, x, keys, docs_cnt in init:
-    visited[y][x].append((keys, docs_cnt))
+    # 탐색 중 키가 없어서 막힌다면 위치 save 후 해당 키 획득 시 다시 queue에 삽입
+    # key - 열쇠(소문자)
+    # value - list(위치) (같은 문이 여러개 있을 수 있음)
+    respawn = defaultdict(list)
+    visited = [[0] * w for _ in range(h)]
+    queue = deque()
 
-# queue = deque(init)
+    ans = 0  # 찾은 문서 개수
 
-ans = 0
+    # 입구로 가기 전 좌표를 queue에 추가
+    for y, x in entries:
+        if y == 0:
+            queue.append((y - 1, x))
+        elif y == h - 1:
+            queue.append((y + 1, x))
+        elif x == 0:
+            queue.append((y, x - 1))
+        else:
+            queue.append((y, x + 1))
 
+    while queue:
+        y, x = queue.popleft()
+        for i in range(4):
+            ny = y + dy[i]
+            nx = x + dx[i]
 
-def find_docs(y: int, x: int, keys: str, docs_cnt: int):
-    pass
+            if (
+                0 <= ny < h
+                and 0 <= nx < w
+                and _map[ny][nx] != "*"
+                and not visited[ny][nx]
+            ):
+                if _map[ny][nx] == ".":
+                    visited[ny][nx] = 1
+                    queue.append((ny, nx))
+
+                elif _map[ny][nx] == "$":
+                    ans += 1
+                    _map[ny][nx] = "."
+                    visited[ny][nx] = 1
+                    queue.append((ny, nx))
+
+                elif _map[ny][nx] == _map[ny][nx].lower():
+                    key = _map[ny][nx]
+                    keys.add(key)
+                    _map[ny][nx] = "."
+                    visited[ny][nx] = 1
+                    queue.append((ny, nx))
+
+                    for ay, ax in respawn[key]:
+
+                        if not visited[ay][ax]:
+                            _map[ay][ax] = "."
+                            visited[ay][ax] = 1
+                            queue.append((ay, ax))
+
+                else:  # 대문자(문)
+                    key = _map[ny][nx].lower()
+                    if key in keys:
+                        _map[ny][nx] = "."
+                        visited[ny][nx] = 1
+                        queue.append((ny, nx))
+                    else:
+                        respawn[key].append((ny, nx))
+
+    print(ans)
