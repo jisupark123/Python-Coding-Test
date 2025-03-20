@@ -71,6 +71,7 @@ def update(start, end, idx, node, value):
 
 
 init(0, N - 1, 1)
+print(tree)
 
 for _ in range(M + K):
     a, b, c = map(int, input().split())
