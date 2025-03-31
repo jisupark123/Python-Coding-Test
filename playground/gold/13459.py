@@ -1,4 +1,4 @@
-# 구슬 탈출 2
+# 구슬 탈출
 
 import sys
 from enum import Enum, unique
@@ -142,12 +142,12 @@ def sol():
                 board_hash = hash(next_board)
                 if board_hash not in visited:
                     if result == Result.SUCCESS:
-                        return moves + 1
+                        return 1
 
                     if result == Result.IN_PROGRESS:
                         visited.add(board_hash)
                         queue.append((next_board, moves + 1))
-    return -1
+    return 0
 
 
 print(sol())
